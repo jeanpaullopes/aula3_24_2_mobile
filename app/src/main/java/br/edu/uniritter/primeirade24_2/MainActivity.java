@@ -2,6 +2,7 @@ package br.edu.uniritter.primeirade24_2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,18 +15,41 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.edu.uniritter.primeirade24_2.models.Post;
+import br.edu.uniritter.primeirade24_2.services.PostServices;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private PostServices ps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+
+
         //escolhe o layout (via xml) a ser 'inflado' na tela
         setContentView(R.layout.main_activity);
         //setContentView(R.layout.novo_layout);
         View btn = this.findViewById(R.id.btn_1);
 
-        View.OnClickListener ocl = new View.OnClickListener() {
+        //cria ou busca o PostServices singleton
+        ps = PostServices.getInstance(getApplicationContext());
+
+        View.OnClickListener         ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Clicou no botão 1");
@@ -81,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
+
+    }
+    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button2) {
             ViewGroup layout = findViewById(R.id.llInterno);
@@ -104,6 +136,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
         if (view.getId() == R.id.button4) {
+
+            List<Post> posts = ps.getPosts();
+            Log.d("Post", "Quantidade de posts: " + posts.size());
+            for (Post p : posts) {
+                Log.d("Post", p.getTitle());
+            }
+            Log.d("Post", "Quantidade de posts: " + posts.size());
+
+
             ViewGroup layout = findViewById(R.id.llInterno);
             for (int i = 0; i < layout.getChildCount(); i++) {
                 View v = layout.getChildAt(i);

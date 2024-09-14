@@ -10,6 +10,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import br.edu.uniritter.primeirade24_2.services.PostServices;
+
 public class Activity2 extends AppCompatActivity {
 
     @Override
@@ -25,6 +27,8 @@ public class Activity2 extends AppCompatActivity {
         Intent intent = getIntent();
         intent.getStringExtra("dado");
         TextView tv = findViewById(R.id.textView5);
-        tv.setText("olá "+intent.getStringExtra("nome"));
+        PostServices ps = PostServices.getInstance();
+
+        tv.setText("olá "+intent.getStringExtra("nome")+ " "+ps.getPosts().get(50).getTitle());
     }
 }
