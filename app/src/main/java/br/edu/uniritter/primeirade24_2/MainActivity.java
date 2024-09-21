@@ -30,6 +30,7 @@ import java.util.List;
 
 import br.edu.uniritter.primeirade24_2.models.Post;
 import br.edu.uniritter.primeirade24_2.services.PostServices;
+import br.edu.uniritter.primeirade24_2.views.PostsActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         btn.setOnClickListener((view)->{
-            Intent intent = new Intent(this, Activity2.class);
+            Intent intent = new Intent(this, PostsActivity.class);//Activity2.class);
             intent.putExtra("dado", "Olá Mundo enviando via Intent");
 
             EditText ed  = findViewById(R.id.edNome);

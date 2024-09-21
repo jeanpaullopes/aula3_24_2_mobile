@@ -2,4 +2,7 @@
     <string name="app_name">Primeira App de 24/2</string>
     <string name="olaMundo">Olá Turma de Dispositivos Móveis 2024/2 !!</string>
     <string name="btn_ok">OK</string>
+    <string name="label_post_id">Post id:</string>
+    <string name="chip_so_do_user">somente do User</string>
+
 </resources>
