@@ -1,8 +1,13 @@
 package br.edu.uniritter.primeirade24_2.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import org.json.JSONObject;
 
-public class Post {
+public class Post implements Parcelable {
     private int userId;
     private int id;
     private String title;
@@ -14,6 +19,25 @@ public class Post {
         this.title = title;
         this.body = body;
     }
+
+    protected Post(Parcel in) {
+        userId = in.readInt();
+        id = in.readInt();
+        title = in.readString();
+        body = in.readString();
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 
     public int getUserId() {
         return userId;
@@ -71,6 +95,20 @@ public class Post {
             e.printStackTrace();
         }
 
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeInt(this.userId);
+        parcel.writeInt(this.id);
+        parcel.writeString(this.title);
+        parcel.writeString(this.body);
 
     }
 }

@@ -6,6 +6,9 @@ android {
     namespace = "br.edu.uniritter.primeirade24_2"
     compileSdk = 34
 
+    buildFeatures {
+        dataBinding = true
+    }
     defaultConfig {
         applicationId = "br.edu.uniritter.primeirade24_2"
         minSdk = 29

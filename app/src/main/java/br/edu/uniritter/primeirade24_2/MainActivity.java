@@ -58,11 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
         btn.setOnClickListener((view)->{
             Intent intent = new Intent(this, PostsActivity.class);//Activity2.class);
-            intent.putExtra("dado", "Olá Mundo enviando via Intent");
-
-            EditText ed  = findViewById(R.id.edNome);
-            intent.putExtra("nome", ed.getText().toString());
-
             startActivity(intent);
 
 
