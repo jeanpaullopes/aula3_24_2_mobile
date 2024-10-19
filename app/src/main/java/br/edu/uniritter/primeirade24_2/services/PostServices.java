@@ -60,7 +60,7 @@ public class PostServices {
         // To-do: implementar lista imutável ou de cópias
         return posts;
     }
-    public Post getPost(int id) {
+    public Post getPost(int id) throws ModelDoesNotExistsException {
         //modo tradicional
         //for (Post post : posts) {
         //    if (post.getId() == id) {
@@ -68,7 +68,23 @@ public class PostServices {
         //    }
         //}
         //modo funcional usando Stream
-        return posts.stream().filter(post -> post.getId() == id).findFirst().orElse(null);
+        Post p = posts.stream().filter(post -> post.getId() == id).findFirst().orElse(null);
+        if (p == null) {
+            throw new ModelDoesNotExistsException("Post");
+        } else {
+            return p;
+        }
+    }
+    public Post getPost2(int id) {
+        //modo tradicional
+        //for (Post post : posts) {
+        //    if (post.getId() == id) {
+        //        return post;
+        //    }
+        //}
+        //modo funcional usando Stream
+        Post p = posts.stream().filter(post -> post.getId() == id).findFirst().orElse(null);
+        return p;
 
     }
     private void initialLoad() {

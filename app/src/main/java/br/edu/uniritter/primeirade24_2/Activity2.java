@@ -23,7 +23,7 @@ public class Activity2 extends AppCompatActivity {
         //setContentView(R.layout.activity_2);
         Intent intent = getIntent();
         Post post = intent.getParcelableExtra("post");
-
+        post.getId();
         Activity2Binding binding = DataBindingUtil.setContentView(this, R.layout.activity_2);
         binding.setObjPost(post);
 

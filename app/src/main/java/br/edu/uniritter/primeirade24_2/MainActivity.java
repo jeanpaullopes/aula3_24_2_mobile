@@ -1,13 +1,16 @@
 package br.edu.uniritter.primeirade24_2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,41 +18,30 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.uniritter.primeirade24_2.models.Post;
+import br.edu.uniritter.primeirade24_2.presenters.MainPresenter;
+import br.edu.uniritter.primeirade24_2.presenters.MainPresenterContract;
 import br.edu.uniritter.primeirade24_2.services.PostServices;
 import br.edu.uniritter.primeirade24_2.views.PostsActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements
+        MainPresenterContract.view {
 
-    private PostServices ps;
+    private MainPresenterContract.presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-
-
         //escolhe o layout (via xml) a ser 'inflado' na tela
         setContentView(R.layout.main_activity);
+
+        this.presenter = new MainPresenter(this);
         //setContentView(R.layout.novo_layout);
         View btn = this.findViewById(R.id.btn_1);
 
         //cria ou busca o PostServices singleton
-        ps = PostServices.getInstance(getApplicationContext());
-
         View.OnClickListener         ocl = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,14 +49,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         btn.setOnClickListener((view)->{
-            Intent intent = new Intent(this, PostsActivity.class);//Activity2.class);
-            startActivity(intent);
-
-
+            presenter.onButtonClick(view);
+});
+        this.findViewById(R.id.btn_1).setOnClickListener((view)->{
+            presenter.onButtonClick(view);
         });
-        this.findViewById(R.id.button2).setOnClickListener(this);
-        this.findViewById(R.id.button3).setOnClickListener(this);
-        this.findViewById(R.id.button4).setOnClickListener(this);
+        this.findViewById(R.id.button2).setOnClickListener((view)->{
+            EditText et = findViewById(R.id.edPostId);
+            try {
+                presenter.setPostId(et.getText().toString());
+                presenter.onButtonClick(view);
+            } catch (NumberFormatException e) {
+                Log.e("MainActivity", "Erro ao converter para inteiro");
+            }
+        });
+        this.findViewById(R.id.button3).setOnClickListener((view)->{
+            presenter.onButtonClick(view);
+        });
+        this.findViewById(R.id.button4).setOnClickListener((view)->{
+            presenter.onButtonClick(view);
+        });
         // ijetando o listener ocl no botão
         //btn.setOnClickListener(ocl);
         /*
@@ -85,18 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         ViewGroup layout = findViewById(R.id.llInterno);
-        for (int i = 0; i < 10; i++) {
-            if (i%2 == 0) {
-                Button novo = new Button(this);
-                novo.setText("Botão novo " + i);
-                novo.setOnClickListener(this);
-                layout.addView(novo);
-            } else {
-                TextView novo = new TextView(this);
-                novo.setText("Texto novo " + i);
-                layout.addView(novo);
-            }
-        }
 
     }
 
@@ -108,47 +100,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.button2) {
-            ViewGroup layout = findViewById(R.id.llInterno);
+    public Context getContext() {
+        return getApplicationContext();
+    }
 
-            for (int i = 0; i < layout.getChildCount(); i++) {
-                View v = layout.getChildAt(i);
-                if (v instanceof Button) {
-                    v.setVisibility(View.INVISIBLE);
-                }
-            }
+    @Override
+    public void openActivity(Class<?> c) {
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
+    }
 
-        }
-        if (view.getId() == R.id.button3) {
-            ViewGroup layout = findViewById(R.id.llInterno);
-            for (int i = 0; i < layout.getChildCount(); i++) {
-                View v = layout.getChildAt(i);
+    @Override
+    public void openActivity(Class<?> c, String parcelableName, Parcelable parcelable) {
+        Intent intent = new Intent(this, c);
+        intent.putExtra(parcelableName, parcelable);
+        startActivity(intent);
+    }
 
-                    v.setVisibility(View.VISIBLE);
-
-            }
-
-        }
-        if (view.getId() == R.id.button4) {
-
-            List<Post> posts = ps.getPosts();
-            Log.d("Post", "Quantidade de posts: " + posts.size());
-            for (Post p : posts) {
-                Log.d("Post", p.getTitle());
-            }
-            Log.d("Post", "Quantidade de posts: " + posts.size());
-
-
-            ViewGroup layout = findViewById(R.id.llInterno);
-            for (int i = 0; i < layout.getChildCount(); i++) {
-                View v = layout.getChildAt(i);
-                if (v instanceof TextView && !(v instanceof Button)){
-                    v.setVisibility(View.GONE);
-                }
-            }
-
-        }
+    @Override
+    public void showMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }
